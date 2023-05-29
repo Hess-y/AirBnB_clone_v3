@@ -28,6 +28,7 @@ def found_not(error):
     """ 404 not found error """
     return (make_response(jsonify({'error': 'Not found'}), 404))
 
+
 if __name__ == '__main__':
     if not HBNB_API_HOST:
         HBNB_API_HOST = "0.0.0.0"
