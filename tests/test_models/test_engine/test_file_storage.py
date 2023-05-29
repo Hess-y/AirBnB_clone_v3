@@ -122,8 +122,7 @@ class TestFileStorage(unittest.TestCase):
 #    def test_count(self):
 #        """Test the the new file storage count method """
 
-class Test_FS(unittest.Testcase):
-    """ testing the methods for file storage """
+    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
     def test_get(self):
         """ testing the get method in file storage """
         obj_dict = models.storage.all(State)
@@ -133,7 +132,8 @@ class Test_FS(unittest.Testcase):
         self.assertIsInstance(obj, State)
         self.assertEqual(object_id, obj.id)
 
-    def test_count(self):
+@unittest.skipIf(models.storage_t == 'db', "not testing file storage")    
+def test_count(self):
         """ testing the count method in file storage """
         state_count = models.storage.count(State)
         state_obj = models.storage.all(State)
