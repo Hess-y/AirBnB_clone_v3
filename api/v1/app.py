@@ -44,7 +44,7 @@ def handle_404_error(error):
 
 if __name__ == "__main__":
     host = getenv('HBNB_API_HOST')
-    port = getenv('HBNB_API_PORT'))
+    port = getenv('HBNB_API_PORT')
     if host is None:
         host = '0.0.0.0'
     if port is None:
