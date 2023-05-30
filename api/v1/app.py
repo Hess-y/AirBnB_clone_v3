@@ -1,37 +1,52 @@
 #!/usr/bin/python3
 """ Setting up API """
 
+from flask import Flask, jsonify, make_response
+from flask_cors import CORS
 from models import storage
 from api.v1.views import app_views
-from flask import Flask, make_response, jsonify
-from flask_cors import CORS
 import os
-
+from os import getenv
 
 app = Flask(__name__)
-cors = CORS(app, resources={r"/*": {"origins": "0.0.0.0"}})
-app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 app.register_blueprint(app_views)
-HBNB_API_HOST = os.getenv("HBNB_API_HOST")
-HBNB_API_PORT = os.getenv("HBNB_API_PORT")
+CORS(app, resources={"*": {"origins": "0.0.0.0"}})
+app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 
 
 @app.teardown_appcontext
-def teardown_db(exception):
-    """ teardown: declare a method to handle @app.teardown_appcontext that
-        calls storage.close()"""
+def teardown_appcontext(exception):
+    """
+    Closes the database connection at the end of the request.
+
+    Args:
+        exception (Exception): The exception object if any
+        occurred during the request.
+    """
     storage.close()
 
 
 @app.errorhandler(404)
-def found_not(error):
-    """ 404 not found error """
-    return (make_response(jsonify({'error': 'Not found'}), 404))
+def handle_404_error(error):
+    """
+    Handles 404 errors and returns a JSON response.
+
+    Args:
+        error (Exception): The exception object representing the 404 error.
+
+    Returns:
+        Response: A Flask JSON response indicating that the requested
+        resource was not found.
+    """
+    response = {"error": "Not found"}
+    return make_response(jsonify(response), 404)
 
 
-if __name__ == '__main__':
-    if not HBNB_API_HOST:
-        HBNB_API_HOST = "0.0.0.0"
-    if not HBNB_API_PORT:
-        HBNB_API_PORT = "5000"
-    app.run(host=HBNB_API_HOST, port=HBNB_API_PORT, threaded=True)
+if __name__ == "__main__":
+    host = getenv('HBNB_API_HOST')
+    port = getenv('HBNB_API_PORT'))
+    if host is None:
+        host = '0.0.0.0'
+    if port is None:
+        port = 5000
+    app.run(host=host, port=port)
