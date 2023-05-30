@@ -87,6 +87,7 @@ class TestFileStorage(unittest.TestCase):
     def test_save(self):
         """Test that save properly saves objects to file.json"""
 
+
 class Test_DB(unittest.Testcase):
     """ testing the methods for db storage """
     def test_get(self):
